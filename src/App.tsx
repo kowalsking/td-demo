@@ -1,37 +1,37 @@
-import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Assets, Container, Sprite, Texture } from "pixi.js";
-import { useEffect, useRef, useState } from "react";
+import { Application, extend, useApplication, useTick } from "@pixi/react"
+import { Assets, Container, Sprite, Texture } from "pixi.js"
+import { useEffect, useRef, useState } from "react"
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
   Container,
   Sprite,
-});
+})
 
 const BunnySprite = () => {
-  const { app } = useApplication();
+  const { app } = useApplication()
 
   // The Pixi.js `Sprite`
-  const spriteRef = useRef<Sprite>(null);
-  const [texture, setTexture] = useState(Texture.EMPTY);
+  const spriteRef = useRef<Sprite>(null)
+  const [texture, setTexture] = useState(Texture.EMPTY)
 
   // Preload the sprite if it hasn't been loaded yet
   useEffect(() => {
     if (texture === Texture.EMPTY) {
       Assets.load("/assets/bunny.png").then((result) => {
-        setTexture(result);
-      });
+        setTexture(result)
+      })
     }
-  }, [texture]);
+  }, [texture])
 
   // Listen for animate update
   useTick((ticker) => {
-    if (!spriteRef.current) return;
+    if (!spriteRef.current) return
     // Just for fun, let's rotate mr rabbit a little.
     // * Delta is 1 if running at 100% performance *
     // * Creates frame-independent transformation *
-    spriteRef.current.rotation += 0.1 * ticker.deltaTime;
-  });
+    spriteRef.current.rotation += 0.1 * ticker.deltaTime
+  })
 
   return (
     <pixiSprite
@@ -41,8 +41,8 @@ const BunnySprite = () => {
       x={app.screen.width / 2}
       y={app.screen.height / 2}
     />
-  );
-};
+  )
+}
 
 export default function App() {
   return (
@@ -51,5 +51,5 @@ export default function App() {
     <Application background={"#1099bb"} resizeTo={window}>
       <BunnySprite />
     </Application>
-  );
+  )
 }
