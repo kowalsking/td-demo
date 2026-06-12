@@ -1,17 +1,7 @@
 import { Sprite, Texture } from "pixi.js";
 
-import {
-  randomBool,
-  randomFloat,
-  randomInt,
-} from "../../../engine/utils/random";
-
-export enum DIRECTION {
-  NE,
-  NW,
-  SE,
-  SW,
-}
+import { randomBool, randomFloat, randomInt } from "@/engine/utils/random";
+import { DIRECTION } from "./Bouncer";
 
 export class Logo extends Sprite {
   public direction!: DIRECTION;
