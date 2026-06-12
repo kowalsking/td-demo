@@ -3,6 +3,7 @@ import { LoadScreen } from "./app/screens/LoadScreen";
 import { MainScreen } from "./app/screens/main/MainScreen";
 import { userSettings } from "./app/utils/userSettings";
 import { CreationEngine } from "./engine/engine";
+import { initDevtools } from "@pixi/devtools";
 
 /**
  * Importing these modules will automatically register there plugins with the engine.
@@ -12,6 +13,7 @@ import "@pixi/sound";
 
 // Create a new creation engine instance
 const engine = new CreationEngine();
+initDevtools({ app: engine });
 setEngine(engine);
 
 (async () => {
