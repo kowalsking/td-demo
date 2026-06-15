@@ -180,10 +180,7 @@ export class Navigation {
    * Show up a popup over current screen
    */
   public async presentPopup(ctor: AppScreenConstructor) {
-    if (this.currentScreen) {
-      this.currentScreen.interactiveChildren = false
-      await this.currentScreen.pause?.()
-    }
+    await this.pause()
 
     if (this.currentPopup) {
       await this.hideAndRemoveScreen(this.currentPopup)
@@ -191,6 +188,13 @@ export class Navigation {
 
     this.currentPopup = new ctor()
     await this.addAndShowScreen(this.currentPopup)
+  }
+
+  public async pause() {
+    if (this.currentScreen) {
+      this.currentScreen.interactiveChildren = false
+      await this.currentScreen.pause?.()
+    }
   }
 
   /**

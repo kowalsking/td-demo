@@ -4,6 +4,7 @@ import { engine } from '../../getEngine'
 import { PausePopup } from '../../popups/PausePopup'
 import { Bouncer } from './Bouncer'
 import { MainUI } from './MainUI'
+import MapLayer from '@/engine/map/MapLayer'
 
 /** The screen that holds the app */
 export class MainScreen extends Container {
@@ -15,6 +16,7 @@ export class MainScreen extends Container {
   private bouncer: Bouncer
   private paused = false
   private mainUI: MainUI
+  private mapLayer: MapLayer
 
   constructor() {
     super()
@@ -27,6 +29,8 @@ export class MainScreen extends Container {
       add: () => this.bouncer.add(),
       remove: () => this.bouncer.remove(),
     })
+    this.mapLayer = new MapLayer()
+    this.addChild(this.mapLayer)
     this.addChild(this.mainUI)
   }
 
@@ -65,6 +69,7 @@ export class MainScreen extends Container {
     this.mainUI.resize(width, height)
 
     this.bouncer.resize(width, height)
+    this.mapLayer.resize(width, height)
   }
 
   /** Show screen with animations */
