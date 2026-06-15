@@ -5,6 +5,7 @@ import { PausePopup } from '../../popups/PausePopup'
 import { Bouncer } from './Bouncer'
 import { MainUI } from './MainUI'
 import MapLayer from '@/engine/map/MapLayer'
+import EnemyManager from '@/app/Enemy/EnemyManager'
 
 /** The screen that holds the app */
 export class MainScreen extends Container {
@@ -17,6 +18,7 @@ export class MainScreen extends Container {
   private paused = false
   private mainUI: MainUI
   private mapLayer: MapLayer
+  private enemy: EnemyManager
 
   constructor() {
     super()
@@ -30,7 +32,12 @@ export class MainScreen extends Container {
       remove: () => this.bouncer.remove(),
     })
     this.mapLayer = new MapLayer()
+
+    console.log('path', this.mapLayer.enemyPath())
+
+    this.enemy = new EnemyManager(this.mapLayer.enemyPath())
     this.addChild(this.mapLayer)
+    this.addChild(this.enemy)
     this.addChild(this.mainUI)
   }
 
@@ -42,6 +49,7 @@ export class MainScreen extends Container {
   public update(_time: Ticker) {
     if (this.paused) return
     this.bouncer.update()
+    this.enemy.update()
   }
 
   /** Pause gameplay - automatically fired when a popup is presented */
@@ -78,6 +86,7 @@ export class MainScreen extends Container {
 
     await this.mainUI.show()
     this.bouncer.show(this)
+    this.enemy.show(this)
   }
 
   /** Hide screen with animations */
