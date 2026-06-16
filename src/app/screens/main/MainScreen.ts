@@ -33,11 +33,10 @@ export class MainScreen extends Container {
     })
     this.mapLayer = new MapLayer()
 
-    console.log('path', this.mapLayer.enemyPath())
-
-    this.enemy = new EnemyManager(this.mapLayer.enemyPath())
+    this.enemy = new EnemyManager(
+      this.mapLayer.toPixelPath(this.mapLayer.enemyPath),
+    )
     this.addChild(this.mapLayer)
-    this.addChild(this.enemy)
     this.addChild(this.mainUI)
   }
 
@@ -86,7 +85,7 @@ export class MainScreen extends Container {
 
     await this.mainUI.show()
     this.bouncer.show(this)
-    this.enemy.show(this)
+    this.enemy.show(this.mapLayer)
   }
 
   /** Hide screen with animations */

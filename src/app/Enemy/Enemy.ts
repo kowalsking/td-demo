@@ -11,10 +11,10 @@ export class Enemy extends Container {
   constructor(waypoints: { x: number; y: number }[]) {
     super()
 
-    this.addChild(new Graphics().rect(0, 0, 32, 32).fill('blue'))
+    this.addChild(new Graphics().rect(-16, -16, 32, 32).fill('blue'))
 
     this.direction = ENEMY_DIRECTION.RIGHT
-    this.speed = 11
+    this.speed = 1
     this.waypoints = waypoints
     this.x = waypoints[0].x
     this.y = waypoints[0].y

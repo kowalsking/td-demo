@@ -38,6 +38,14 @@ export default class MapLayer extends Container {
     this.render()
   }
 
+  get mapHeight() {
+    return map.length
+  }
+
+  get mapWidth() {
+    return map[0].length
+  }
+
   render() {
     for (let y = 0; y < this.mapHeight; y++) {
       for (let x = 0; x < this.mapWidth; x++) {
@@ -69,40 +77,62 @@ export default class MapLayer extends Container {
     }
   }
 
-  enemyPath() {
-    const path: { x: number; y: number }[] = []
-    path.push({ x: 1, y: 1 })
-    path.push({ x: 14, y: 1 })
-    path.push({ x: 14, y: 2 })
-    path.push({ x: 14, y: 3 })
-    path.push({ x: 14, y: 3 })
-    // path.push({ x: 1, y: 2 })
-    // path.push({ x: 1, y: 2 })
-    // path.push({ x: 1, y: 2 })
-    // for (let y = 0; y < this.mapHeight; y++) {
-    //   for (let x = 0; x < this.mapWidth; x++) {
-    //     if (
-    //       map[y][x] === Tile.Path ||
-    //       map[y][x] === Tile.Start ||
-    //       map[y][x] === Tile.End
-    //     ) {
-    //       path.push({ x, y })
-    //     }
-    //   }
-    // }
+  public toPixelPath(waypoints: { x: number; y: number }[]) {
+    const half = this.tileSize / 2
+    return waypoints.map(({ x, y }) => ({
+      x: x * this.tileSize + half,
+      y: y * this.tileSize + half,
+    }))
+  }
+
+  // AI generated pathfinding algorithm to find the path from start to end
+  get enemyPath(): { x: number; y: number }[] {
+    let start: { x: number; y: number } | null = null
+    for (let y = 0; y < this.mapHeight && !start; y++) {
+      for (let x = 0; x < this.mapWidth && !start; x++) {
+        if (map[y][x] === Tile.Start) start = { x, y }
+      }
+    }
+    if (!start) return []
+
+    const path = [start]
+    const visited = new Set([`${start.x},${start.y}`])
+    let current = start
+
+    const dirs = [
+      { dx: 1, dy: 0 },
+      { dx: -1, dy: 0 },
+      { dx: 0, dy: 1 },
+      { dx: 0, dy: -1 },
+    ]
+
+    while (true) {
+      let moved = false
+      for (const { dx, dy } of dirs) {
+        const nx = current.x + dx
+        const ny = current.y + dy
+        if (visited.has(`${nx},${ny}`)) continue
+        const tile = map[ny]?.[nx]
+        if (tile === Tile.Path || tile === Tile.End) {
+          visited.add(`${nx},${ny}`)
+          path.push({ x: nx, y: ny })
+          current = { x: nx, y: ny }
+          moved = true
+          if (tile === Tile.End) return path
+          break
+        }
+      }
+      if (!moved) break
+    }
     return path
   }
 
   resize(width: number, height: number) {
-    // this.width = width
-    // this.height = height
-  }
-
-  get mapHeight() {
-    return map.length
-  }
-
-  get mapWidth() {
-    return map[0].length
+    const naturalWidth = this.mapWidth * this.tileSize
+    const naturalHeight = this.mapHeight * this.tileSize
+    const scale = Math.min(width / naturalWidth, height / naturalHeight)
+    this.scale.set(scale)
+    this.x = (width - naturalWidth * scale) / 2
+    this.y = (height - naturalHeight * scale) / 2
   }
 }
