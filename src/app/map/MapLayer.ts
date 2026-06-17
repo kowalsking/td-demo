@@ -1,4 +1,4 @@
-import { Container, Graphics } from 'pixi.js'
+import { Container, Graphics, Sprite, Texture } from 'pixi.js'
 
 enum Tile {
   Empty,
@@ -35,7 +35,8 @@ export default class MapLayer extends Container {
   constructor() {
     super()
     this.label = 'mapLayer'
-    this.render()
+    // this.render()
+    this.renderImage()
   }
 
   get mapHeight() {
@@ -44,6 +45,13 @@ export default class MapLayer extends Container {
 
   get mapWidth() {
     return map[0].length
+  }
+
+  renderImage() {
+    const sprite = new Sprite({
+      texture: Texture.from('gameMap.png'),
+    })
+    this.addChild(sprite)
   }
 
   render() {

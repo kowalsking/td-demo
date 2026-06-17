@@ -4,7 +4,7 @@ import { engine } from '../../getEngine'
 import { PausePopup } from '../../popups/PausePopup'
 import { Bouncer } from './Bouncer'
 import { MainUI } from './MainUI'
-import MapLayer from '@/engine/map/MapLayer'
+import MapLayer from '@/app/map/MapLayer'
 import EnemyManager from '@/app/Enemy/EnemyManager'
 
 /** The screen that holds the app */
@@ -16,7 +16,7 @@ export class MainScreen extends Container {
 
   private bouncer: Bouncer
   private paused = false
-  private mainUI: MainUI
+  // private mainUI: MainUI
   private mapLayer: MapLayer
   private enemy: EnemyManager
 
@@ -27,17 +27,17 @@ export class MainScreen extends Container {
     this.mainContainer.label = 'mainContainer'
     this.addChild(this.mainContainer)
     this.bouncer = new Bouncer()
-    this.mainUI = new MainUI({
-      add: () => this.bouncer.add(),
-      remove: () => this.bouncer.remove(),
-    })
+    // this.mainUI = new MainUI({
+    //   add: () => this.bouncer.add(),
+    //   remove: () => this.bouncer.remove(),
+    // })
     this.mapLayer = new MapLayer()
 
     this.enemy = new EnemyManager(
       this.mapLayer.toPixelPath(this.mapLayer.enemyPath),
     )
     this.addChild(this.mapLayer)
-    this.addChild(this.mainUI)
+    // this.addChild(this.mainUI)
   }
 
   /** Prepare the screen just before showing */
@@ -73,17 +73,17 @@ export class MainScreen extends Container {
 
     this.mainContainer.x = centerX
     this.mainContainer.y = centerY
-    this.mainUI.resize(width, height)
+    // this.mainUI.resize(width, height)
 
     this.bouncer.resize(width, height)
-    this.mapLayer.resize(width, height)
+    // this.mapLayer.resize(width, height)
   }
 
   /** Show screen with animations */
   public async show(): Promise<void> {
     engine().audio.bgm.play('main/sounds/bgm-main.mp3', { volume: 0.5 })
 
-    await this.mainUI.show()
+    // await this.mainUI.show()
     this.bouncer.show(this)
     this.enemy.show(this.mapLayer)
   }
