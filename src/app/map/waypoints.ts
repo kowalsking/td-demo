@@ -1,4 +1,6 @@
-export const waypoints = [
+import { Waypoint } from './MapLayer'
+
+export const waypoints: Waypoint[] = [
   {
     x: 0,
     y: 0,

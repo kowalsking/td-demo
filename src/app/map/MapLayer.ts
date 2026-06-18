@@ -29,6 +29,11 @@ export const map = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
+export type Waypoint = {
+  x: number
+  y: number
+}
+
 export default class MapLayer extends Container {
   readonly tileSize = 64
 

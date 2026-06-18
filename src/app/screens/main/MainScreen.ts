@@ -33,9 +33,7 @@ export class MainScreen extends Container {
     // })
     this.mapLayer = new MapLayer()
 
-    this.enemy = new EnemyManager(
-      this.mapLayer.toPixelPath(this.mapLayer.enemyPath),
-    )
+    this.enemy = new EnemyManager()
     this.addChild(this.mapLayer)
     // this.addChild(this.mainUI)
   }
