@@ -39,7 +39,7 @@ export class Enemy extends Container {
     this.addChild(
       new Graphics()
         .rect(this.x, this.y, this.eWidth, this.eHeight)
-        .fill('blue'),
+        .fill('red'),
     )
   }
 

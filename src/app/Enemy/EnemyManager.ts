@@ -1,6 +1,6 @@
 import { Container, Graphics } from 'pixi.js'
 import { Enemy } from './Enemy'
-import { waypoints } from '@/app/map/waypoints'
+import { waypoints } from '@/app/map/waypointsData'
 import { Waypoint } from '../map/MapLayer'
 import { waitFor } from '@/engine/utils/waitFor'
 
