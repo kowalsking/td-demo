@@ -32,7 +32,6 @@ export class MainScreen extends Container {
     //   remove: () => this.bouncer.remove(),
     // })
     this.mapLayer = new MapLayer()
-
     this.enemy = new EnemyManager()
     this.addChild(this.mapLayer)
     // this.addChild(this.mainUI)
@@ -47,6 +46,7 @@ export class MainScreen extends Container {
     if (this.paused) return
     this.bouncer.update()
     this.enemy.update()
+    this.mapLayer.update()
   }
 
   /** Pause gameplay - automatically fired when a popup is presented */

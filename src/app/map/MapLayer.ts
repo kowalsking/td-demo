@@ -16,6 +16,11 @@ export type Waypoint = {
   y: number
 }
 
+export type Coordinate = {
+  x: number
+  y: number
+}
+
 export default class MapLayer extends Container {
   readonly tileSize = 64
   private placementTiles: PlacementTile[] = []
@@ -31,28 +36,30 @@ export default class MapLayer extends Container {
   private drawPlacementTiles() {
     tilesData2D.forEach((row, y) => {
       row.forEach((symbol, x) => {
-        // ! todo: Create emun of Symbols
         if (symbol === 14) {
-          const pos = {
+          const pos: Coordinate = {
             x: x * this.tileSize,
             y: y * this.tileSize,
           }
-          const tile = new PlacementTile({
-            pos,
-            onClick: () => {
-              if (tile.occupied) return
-              tile.occupied = true
-              const building = new Building({ pos })
-              this.buildings.push(building)
-              this.addChild(building)
-              console.log(this.buildings)
-            },
-          })
-          this.placementTiles.push(tile)
-          this.addChild(tile)
+          this.placeTile(pos)
         }
       })
     })
+  }
+
+  private placeTile(pos: Coordinate) {
+    const tile = new PlacementTile({
+      pos,
+      onClick: () => {
+        if (tile.occupied) return
+        tile.occupied = true
+        const building = new Building({ pos })
+        this.buildings.push(building)
+        this.addChild(building)
+      },
+    })
+    this.placementTiles.push(tile)
+    this.addChild(tile)
   }
 
   renderMapImage() {
@@ -68,6 +75,14 @@ export default class MapLayer extends Container {
       x: x * this.tileSize + half,
       y: y * this.tileSize + half,
     }))
+  }
+
+  public update() {
+    this.buildings.forEach((b) => {
+      b.projectiles.forEach((p) => {
+        p.update()
+      })
+    })
   }
 
   resize(width: number, height: number) {
