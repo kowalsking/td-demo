@@ -1,6 +1,7 @@
 import { Container, Graphics, Sprite, Texture } from 'pixi.js'
 import tilesData2D from './tilesPlacementData'
 import PlacementTile from './PlacementTile'
+import Building from '../buildings/Building'
 
 enum Tile {
   Empty,
@@ -17,43 +18,50 @@ export type Waypoint = {
 
 export default class MapLayer extends Container {
   readonly tileSize = 64
-  private tilesPlace: PlacementTile[] = []
+  private placementTiles: PlacementTile[] = []
+  private buildings: Building[] = []
 
   constructor() {
     super()
     this.label = 'mapLayer'
-    // this.render()
-    this.renderImage()
-
-    this.convertTilesDataTo2D()
+    this.renderMapImage()
+    this.drawPlacementTiles()
   }
 
-  private convertTilesDataTo2D() {
+  private drawPlacementTiles() {
     tilesData2D.forEach((row, y) => {
       row.forEach((symbol, x) => {
+        // ! todo: Create emun of Symbols
         if (symbol === 14) {
-          // add building placement tile here
-          this.tilesPlace.push(
-            new PlacementTile({
-              pos: {
-                x: x * this.tileSize,
-                y: y * this.tileSize,
-              },
-            }),
-          )
+          const pos = {
+            x: x * this.tileSize,
+            y: y * this.tileSize,
+          }
+          const tile = new PlacementTile({
+            pos,
+            onClick: () => {
+              if (tile.occupied) return
+              tile.occupied = true
+              const building = new Building({ pos })
+              this.buildings.push(building)
+              this.addChild(building)
+              console.log(this.buildings)
+            },
+          })
+          this.placementTiles.push(tile)
+          this.addChild(tile)
         }
       })
     })
-
-    console.log(this.tilesPlace)
   }
 
-  renderImage() {
+  renderMapImage() {
     const sprite = new Sprite({
       texture: Texture.from('gameMap.png'),
     })
     this.addChild(sprite)
   }
+
   public toPixelPath(waypoints: { x: number; y: number }[]) {
     const half = this.tileSize / 2
     return waypoints.map(({ x, y }) => ({
