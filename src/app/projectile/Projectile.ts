@@ -3,11 +3,11 @@ import { Enemy } from '../Enemy/Enemy'
 
 export default class Projectile extends Graphics {
   private speed = 3
-  private radius = 10
+  public radius = 10
 
   constructor(
     pos: { x: number; y: number },
-    private enemy: Enemy,
+    public enemy: Enemy,
   ) {
     super()
     this.x = pos.x

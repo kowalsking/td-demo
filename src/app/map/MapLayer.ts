@@ -28,6 +28,7 @@ export default class MapLayer extends Container {
   private placementTiles: PlacementTile[] = []
   private buildings: Building[] = []
   private projectiles: Projectile[] = []
+  private frames = 0
 
   constructor() {
     super()
@@ -80,7 +81,10 @@ export default class MapLayer extends Container {
     }))
   }
 
-  public spawnProjectile(building: Building, enemy: Enemy) {
+  public spawnProjectile(building: Building, enemy: Enemy): void {
+    if (!building.canShoot) return
+    building.resetCooldown()
+
     const projectile = new Projectile(building.center, enemy)
     this.projectiles.push(projectile)
     this.addChild(projectile)
@@ -88,12 +92,30 @@ export default class MapLayer extends Container {
 
   public update(enemies: Enemy[]) {
     this.buildings.forEach((building) => {
-      if (enemies.length > 0 && building.canShoot) {
-        building.canShoot = false
-        this.spawnProjectile(building, enemies[0])
+      building.update()
+
+      if (enemies.length > 0) {
+        const validEnemies = enemies.filter((e) => {
+          const xDifference = e.center.x - building.center.x
+          const yDifference = e.center.y - building.center.y
+          const distance = Math.hypot(xDifference, yDifference)
+          return distance < e.radius + building.shootRadius
+        })
+        if (validEnemies[0]) this.spawnProjectile(building, validEnemies[0])
       }
     })
-    this.projectiles.forEach((p) => p.update())
+
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      const p = this.projectiles[i]
+      p.update()
+      const xDifference = p.enemy.center.x - p.x
+      const yDifference = p.enemy.center.y - p.y
+      const distance = Math.hypot(xDifference, yDifference)
+      if (distance < p.enemy.size + p.radius) {
+        this.projectiles.splice(i, 1)
+        p.destroy()
+      }
+    }
   }
 
   resize(width: number, height: number) {
