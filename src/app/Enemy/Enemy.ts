@@ -9,7 +9,7 @@ export class Enemy extends Container {
   private isEndReached = false
   private eWidth: number
   private eHeight: number
-  private center = {
+  public center: { x: number; y: number } = {
     x: 0,
     y: 0,
   }
@@ -80,6 +80,13 @@ export class Enemy extends Container {
       this.currentWaypointIndex < this.waypoints.length - 1
     ) {
       this.currentWaypointIndex++
+    }
+  }
+
+  public getCenter() {
+    return {
+      x: this.x + this.eWidth / 2,
+      y: this.y + this.eHeight / 2,
     }
   }
 }

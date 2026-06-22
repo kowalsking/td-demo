@@ -46,7 +46,7 @@ export class MainScreen extends Container {
     if (this.paused) return
     this.bouncer.update()
     this.enemy.update()
-    this.mapLayer.update()
+    this.mapLayer.update(this.enemy.allEnemies)
   }
 
   /** Pause gameplay - automatically fired when a popup is presented */

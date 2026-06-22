@@ -1,7 +1,9 @@
-import { Container, Graphics, Sprite, Texture } from 'pixi.js'
+import { Container, Sprite, Texture } from 'pixi.js'
 import tilesData2D from './tilesPlacementData'
 import PlacementTile from './PlacementTile'
 import Building from '../buildings/Building'
+import Projectile from '../projectile/Projectile'
+import { Enemy } from '../Enemy/Enemy'
 
 enum Tile {
   Empty,
@@ -25,6 +27,7 @@ export default class MapLayer extends Container {
   readonly tileSize = 64
   private placementTiles: PlacementTile[] = []
   private buildings: Building[] = []
+  private projectiles: Projectile[] = []
 
   constructor() {
     super()
@@ -77,12 +80,20 @@ export default class MapLayer extends Container {
     }))
   }
 
-  public update() {
-    this.buildings.forEach((b) => {
-      b.projectiles.forEach((p) => {
-        p.update()
-      })
+  public spawnProjectile(building: Building, enemy: Enemy) {
+    const projectile = new Projectile(building.center, enemy)
+    this.projectiles.push(projectile)
+    this.addChild(projectile)
+  }
+
+  public update(enemies: Enemy[]) {
+    this.buildings.forEach((building) => {
+      if (enemies.length > 0 && building.canShoot) {
+        building.canShoot = false
+        this.spawnProjectile(building, enemies[0])
+      }
     })
+    this.projectiles.forEach((p) => p.update())
   }
 
   resize(width: number, height: number) {

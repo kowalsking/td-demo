@@ -14,7 +14,7 @@ export enum ENEMY_DIRECTION {
 export default class EnemyManager extends Container {
   private readonly ENEMY_COUNT = 10
   private readonly WAIT_DURATION = 2
-  private allEnemies: Enemy[] = []
+  public allEnemies: Enemy[] = []
   private path: Waypoint[] = []
   constructor() {
     super()
