@@ -6,52 +6,59 @@ export class Enemy extends Container {
   public speed!: number
   public waypoints: { x: number; y: number }[] = []
   private currentWaypointIndex = 0
-  private isEndReached = false
-  private eWidth: number
-  private eHeight: number
   public radius = 50
-  public center: { x: number; y: number } = {
-    x: 0,
-    y: 0,
-  }
+  public center: { x: number; y: number } = { x: 0, y: 0 }
+
+  private eWidth = 100
+  private eHeight = 100
+  private _health = 100
+  private healthBar!: Graphics
 
   constructor(waypoints: { x: number; y: number }[]) {
     super()
-
-    // this.position.set(0, 0)
-    this.eWidth = 100
-    this.eHeight = 100
 
     this.direction = ENEMY_DIRECTION.RIGHT
     this.speed = 1
     this.waypoints = waypoints
     this.x = waypoints[0].x
     this.y = waypoints[0].y
-
-    this.center = {
-      x: this.x + this.eWidth / 2,
-      y: this.y + this.eHeight / 2,
-    }
+    this.center = { x: this.x + this.eWidth / 2, y: this.y + this.eHeight / 2 }
 
     this.draw()
   }
 
-  public draw() {
-    this.addChild(
-      new Graphics()
-        .rect(this.x, this.y, this.eWidth, this.eHeight)
-        .fill('red'),
-    )
+  get health() {
+    return this._health
+  }
+
+  set health(value: number) {
+    this._health = Math.max(0, value)
+    this.redrawHealthBar()
   }
 
   public get size() {
     return (this.eHeight + this.eWidth) / 2
   }
 
-  update() {
-    // if (this.isEndReached) return
+  private draw() {
+    this.addChild(
+      new Graphics().rect(0, 0, this.eWidth, this.eHeight).fill('red'),
+    )
+    this.addChild(new Graphics().rect(0, -15, this.eWidth, 12).fill('darkred'))
 
-    const target = this.waypoints[this.currentWaypointIndex]
+    this.healthBar = new Graphics()
+    this.redrawHealthBar()
+    this.addChild(this.healthBar)
+  }
+
+  private redrawHealthBar() {
+    this.healthBar.clear()
+    this.healthBar
+      .rect(0, -15, (this.eWidth * this._health) / 100, 12)
+      .fill('green')
+  }
+
+  update() {
     // const dx = target.x - this.x
     // const dy = target.y - this.y
     // const distance = Math.sqrt(dx * dx + dy * dy)
@@ -67,6 +74,7 @@ export class Enemy extends Container {
     //   this.x += (dx / distance) * this.speed
     //   this.y += (dy / distance) * this.speed
     // }
+    const target = this.waypoints[this.currentWaypointIndex]
 
     const yDistance = target.y - this.center.y
     const xDistance = target.x - this.center.x
@@ -74,10 +82,7 @@ export class Enemy extends Container {
     this.x += Math.cos(angle)
     this.y += Math.sin(angle)
 
-    this.center = {
-      x: this.x + this.eWidth / 2,
-      y: this.y + this.eHeight / 2,
-    }
+    this.center = { x: this.x + this.eWidth / 2, y: this.y + this.eHeight / 2 }
 
     if (
       Math.round(this.center.x) === Math.round(target.x) &&
