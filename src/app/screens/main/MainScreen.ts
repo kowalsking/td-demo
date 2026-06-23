@@ -11,12 +11,13 @@ import EnemyManager from '@/app/Enemy/EnemyManager'
 export class MainScreen extends Container {
   /** Assets bundles required by this screen */
   public static assetBundles = ['main']
+  public life = 10
 
   public mainContainer: Container
 
   private bouncer: Bouncer
   private paused = false
-  // private mainUI: MainUI
+  private mainUI: MainUI
   private mapLayer: MapLayer
   private enemyManager: EnemyManager
 
@@ -27,14 +28,19 @@ export class MainScreen extends Container {
     this.mainContainer.label = 'mainContainer'
     this.addChild(this.mainContainer)
     this.bouncer = new Bouncer()
-    // this.mainUI = new MainUI({
-    //   add: () => this.bouncer.add(),
-    //   remove: () => this.bouncer.remove(),
-    // })
+    this.mainUI = new MainUI({
+      add: () => this.bouncer.add(),
+      remove: () => this.bouncer.remove(),
+      lifeCount: this.life,
+    })
     this.mapLayer = new MapLayer()
     this.enemyManager = new EnemyManager(this.mapLayer)
     this.addChild(this.mapLayer)
-    // this.addChild(this.mainUI)
+    this.enemyManager.on('decrease_life', () => {
+      this.mainUI.updateLifeText(--this.life)
+      console.log('this.life', this.life)
+    })
+    this.addChild(this.mainUI)
   }
 
   /** Prepare the screen just before showing */
@@ -44,6 +50,10 @@ export class MainScreen extends Container {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public update(_time: Ticker) {
     if (this.paused) return
+    if (this.life === 0) {
+      console.log('GAME OVER!')
+      return
+    }
     this.bouncer.update()
     this.enemyManager.update()
     this.mapLayer.update(this.enemyManager.allEnemies)
@@ -71,7 +81,7 @@ export class MainScreen extends Container {
 
     this.mainContainer.x = centerX
     this.mainContainer.y = centerY
-    // this.mainUI.resize(width, height)
+    this.mainUI.resize(width, height)
 
     this.bouncer.resize(width, height)
     // this.mapLayer.resize(width, height)
@@ -81,7 +91,7 @@ export class MainScreen extends Container {
   public async show(): Promise<void> {
     engine().audio.bgm.play('main/sounds/bgm-main.mp3', { volume: 0.5 })
 
-    // await this.mainUI.show()
+    await this.mainUI.show()
     this.bouncer.show(this)
     this.enemyManager.show()
   }

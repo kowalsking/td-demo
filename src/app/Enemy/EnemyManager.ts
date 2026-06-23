@@ -36,6 +36,11 @@ export default class EnemyManager extends Container {
 
       this.mapContainer.addChild(enemy)
       this.allEnemies.push(enemy)
+      enemy.on('finished', () => {
+        const enemyIndex = this.allEnemies.indexOf(enemy)
+        this.allEnemies.splice(enemyIndex, 1)
+        this.emit('decrease_life')
+      })
       await waitFor(this.WAIT_DURATION)
     }
   }

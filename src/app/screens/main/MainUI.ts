@@ -4,18 +4,29 @@ import { SettingsPopup } from '@/app/popups/SettingsPopup'
 import { Button } from '@/app/ui/Button'
 import { FancyButton } from '@pixi/ui'
 import { animate, AnimationPlaybackControls } from 'motion'
-import { Container } from 'pixi.js'
+import { Container, Text } from 'pixi.js'
 
 export class MainUI extends Container {
   private pauseButton: FancyButton
   private settingsButton: FancyButton
   private addButton: FancyButton
   private removeButton: FancyButton
+  private lifeCount: number
+  private lifeText: Text
 
-  constructor({ add, remove }: { add: () => void; remove: () => void }) {
+  constructor({
+    add,
+    remove,
+    lifeCount,
+  }: {
+    add: () => void
+    remove: () => void
+    lifeCount: number
+  }) {
     super()
 
     this.label = 'mainUI'
+    this.lifeCount = lifeCount
 
     const buttonAnimations = {
       hover: {
@@ -67,6 +78,14 @@ export class MainUI extends Container {
     })
     this.removeButton.onPress.connect(() => remove())
     this.addChild(this.removeButton)
+
+    this.lifeText = new Text(`${this.lifeCount}`)
+
+    this.addChild(this.lifeText)
+  }
+
+  public updateLifeText(lifeCount: number) {
+    this.lifeText.text = lifeCount
   }
 
   resize(width: number, height: number): void {
@@ -74,6 +93,8 @@ export class MainUI extends Container {
     this.pauseButton.y = 30
     this.settingsButton.x = width - 30
     this.settingsButton.y = 30
+    this.lifeText.x = width - 30
+    this.lifeText.y = 30
     this.removeButton.x = width / 2 - 100
     this.removeButton.y = height - 75
     this.addButton.x = width / 2 + 100

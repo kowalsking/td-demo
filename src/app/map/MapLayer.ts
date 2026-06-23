@@ -111,7 +111,6 @@ export default class MapLayer extends Container {
       const xDifference = p.enemy.center.x - p.x
       const yDifference = p.enemy.center.y - p.y
       const distance = Math.hypot(xDifference, yDifference)
-
       // hit enemy
       if (distance < p.enemy.size + p.radius) {
         p.enemy.health -= 20
@@ -122,7 +121,6 @@ export default class MapLayer extends Container {
             p.enemy.destroy()
           }
         }
-        console.log('enemies', enemies)
         this.projectiles.splice(i, 1)
         p.destroy()
       }

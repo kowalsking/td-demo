@@ -5,6 +5,7 @@ export class Enemy extends Container {
   public direction!: ENEMY_DIRECTION
   public speed!: number
   public waypoints: { x: number; y: number }[] = []
+  private isEndReached = false
   private currentWaypointIndex = 0
   public radius = 50
   public center: { x: number; y: number } = { x: 0, y: 0 }
@@ -18,7 +19,7 @@ export class Enemy extends Container {
     super()
 
     this.direction = ENEMY_DIRECTION.RIGHT
-    this.speed = 1
+    this.speed = 10
     this.waypoints = waypoints
     this.x = waypoints[0].x
     this.y = waypoints[0].y
@@ -59,37 +60,27 @@ export class Enemy extends Container {
   }
 
   update() {
-    // const dx = target.x - this.x
-    // const dy = target.y - this.y
-    // const distance = Math.sqrt(dx * dx + dy * dy)
-
-    // if (distance < this.speed) {
-    //   this.x = target.x
-    //   this.y = target.y
-    //   this.currentWaypointIndex++
-    //   if (this.currentWaypointIndex >= this.waypoints.length) {
-    //     this.isEndReached = true
-    //   }
-    // } else {
-    //   this.x += (dx / distance) * this.speed
-    //   this.y += (dy / distance) * this.speed
-    // }
-    const target = this.waypoints[this.currentWaypointIndex]
-
-    const yDistance = target.y - this.center.y
-    const xDistance = target.x - this.center.x
-    const angle = Math.atan2(yDistance, xDistance)
-    this.x += Math.cos(angle)
-    this.y += Math.sin(angle)
+    if (this.isEndReached) return
 
     this.center = { x: this.x + this.eWidth / 2, y: this.y + this.eHeight / 2 }
 
-    if (
-      Math.round(this.center.x) === Math.round(target.x) &&
-      Math.round(this.center.y) === Math.round(target.y) &&
-      this.currentWaypointIndex < this.waypoints.length - 1
-    ) {
+    const target = this.waypoints[this.currentWaypointIndex]
+    const dx = target.x - this.center.x
+    const dy = target.y - this.center.y
+    const distance = Math.hypot(dx, dy)
+
+    if (distance < this.speed) {
+      this.x = target.x - this.eWidth / 2
+      this.y = target.y - this.eHeight / 2
       this.currentWaypointIndex++
+      if (this.currentWaypointIndex >= this.waypoints.length) {
+        this.isEndReached = true
+        this.emit('finished')
+        this.destroy()
+      }
+    } else {
+      this.x += (dx / distance) * this.speed
+      this.y += (dy / distance) * this.speed
     }
   }
 }
