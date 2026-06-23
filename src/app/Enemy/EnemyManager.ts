@@ -14,27 +14,40 @@ export enum ENEMY_DIRECTION {
 export default class EnemyManager extends Container {
   private readonly ENEMY_COUNT = 10
   private readonly WAIT_DURATION = 2
+  private enemyCount = 3 // move it in WaveManager ()
   public allEnemies: Enemy[] = []
   private path: Waypoint[] = []
-  constructor() {
+  private mapContainer: Container
+
+  constructor(parent: Container) {
     super()
 
+    this.mapContainer = parent
     this.path = waypoints
   }
 
-  public async show(parent: Container) {
-    for (let i = 0; i < this.ENEMY_COUNT; i++) {
+  public async show() {
+    await this.spawnEnemies(3)
+  }
+
+  public async spawnEnemies(count: number) {
+    for (let i = 0; i < count; i++) {
       const enemy = new Enemy(this.path)
 
-      parent.addChild(enemy)
+      this.mapContainer.addChild(enemy)
       this.allEnemies.push(enemy)
       await waitFor(this.WAIT_DURATION)
     }
   }
 
-  update() {
+  async update() {
     this.allEnemies.forEach((entity) => {
       entity.update()
     })
+
+    if (this.allEnemies.length === 0) {
+      this.enemyCount += 2
+      await this.spawnEnemies(this.enemyCount)
+    }
   }
 }

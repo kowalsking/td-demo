@@ -18,7 +18,7 @@ export class MainScreen extends Container {
   private paused = false
   // private mainUI: MainUI
   private mapLayer: MapLayer
-  private enemy: EnemyManager
+  private enemyManager: EnemyManager
 
   constructor() {
     super()
@@ -32,7 +32,7 @@ export class MainScreen extends Container {
     //   remove: () => this.bouncer.remove(),
     // })
     this.mapLayer = new MapLayer()
-    this.enemy = new EnemyManager()
+    this.enemyManager = new EnemyManager(this.mapLayer)
     this.addChild(this.mapLayer)
     // this.addChild(this.mainUI)
   }
@@ -45,8 +45,8 @@ export class MainScreen extends Container {
   public update(_time: Ticker) {
     if (this.paused) return
     this.bouncer.update()
-    this.enemy.update()
-    this.mapLayer.update(this.enemy.allEnemies)
+    this.enemyManager.update()
+    this.mapLayer.update(this.enemyManager.allEnemies)
   }
 
   /** Pause gameplay - automatically fired when a popup is presented */
@@ -83,7 +83,7 @@ export class MainScreen extends Container {
 
     // await this.mainUI.show()
     this.bouncer.show(this)
-    this.enemy.show(this.mapLayer)
+    this.enemyManager.show()
   }
 
   /** Hide screen with animations */
