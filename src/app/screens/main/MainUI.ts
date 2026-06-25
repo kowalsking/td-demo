@@ -13,6 +13,7 @@ export class MainUI extends Container {
   private removeButton: FancyButton
   private lifeCount: number
   private lifeText: Text
+  private gameOverText: Text = new Text()
 
   constructor({
     add,
@@ -79,13 +80,36 @@ export class MainUI extends Container {
     this.removeButton.onPress.connect(() => remove())
     this.addChild(this.removeButton)
 
-    this.lifeText = new Text(`${this.lifeCount}`)
+    this.lifeText = new Text({ text: `${this.lifeCount}` })
 
     this.addChild(this.lifeText)
+
+    this.createGameOverText()
+  }
+
+  private createGameOverText() {
+    this.gameOverText = new Text({
+      text: 'GAME OVER',
+      style: {
+        fill: '#ffffff',
+        stroke: {
+          width: 4,
+          color: '#000000',
+        },
+        fontSize: 72,
+      },
+      anchor: 0.5,
+      visible: false,
+    })
+    this.addChild(this.gameOverText)
   }
 
   public updateLifeText(lifeCount: number) {
     this.lifeText.text = lifeCount
+  }
+
+  public showGameOverText() {
+    this.gameOverText.visible = true
   }
 
   resize(width: number, height: number): void {
@@ -99,6 +123,8 @@ export class MainUI extends Container {
     this.removeButton.y = height - 75
     this.addButton.x = width / 2 + 100
     this.addButton.y = height - 75
+    this.gameOverText.x = width / 2
+    this.gameOverText.y = height / 2
   }
 
   public async show(): Promise<void> {

@@ -52,6 +52,7 @@ export class MainScreen extends Container {
     if (this.paused) return
     if (this.life === 0) {
       console.log('GAME OVER!')
+      this.mainUI.showGameOverText()
       return
     }
     this.bouncer.update()
