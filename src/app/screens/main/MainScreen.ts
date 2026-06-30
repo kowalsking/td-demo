@@ -12,6 +12,7 @@ export class MainScreen extends Container {
   /** Assets bundles required by this screen */
   public static assetBundles = ['main']
   public life = 10
+  public coins = 0
 
   public mainContainer: Container
 
@@ -40,6 +41,9 @@ export class MainScreen extends Container {
       this.mainUI.updateLifeText(--this.life)
       console.log('this.life', this.life)
     })
+    this.mapLayer.on('add_coins', ({ coins }) => {
+      this.mainUI.updateCoinText((this.coins += coins))
+    })
     this.addChild(this.mainUI)
   }
 
@@ -51,8 +55,8 @@ export class MainScreen extends Container {
   public update(_time: Ticker) {
     if (this.paused) return
     if (this.life === 0) {
-      console.log('GAME OVER!')
       this.mainUI.showGameOverText()
+      this.paused = true
       return
     }
     this.bouncer.update()

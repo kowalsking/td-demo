@@ -119,6 +119,7 @@ export default class MapLayer extends Container {
           if (enemyIndex !== -1) {
             enemies.splice(enemyIndex, 1)
             p.enemy.destroy()
+            this.emit('add_coins', { coins: 10 })
           }
         }
         this.projectiles.splice(i, 1)
