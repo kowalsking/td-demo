@@ -84,6 +84,7 @@ export default class MapLayer extends Container {
   public spawnProjectile(building: Building, enemy: Enemy): void {
     if (!building.canShoot) return
     building.resetCooldown()
+    building.shoot()
 
     const projectile = new Projectile(building.center, enemy)
     this.projectiles.push(projectile)

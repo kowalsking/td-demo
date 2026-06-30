@@ -1,15 +1,8 @@
-import {
-  AnimatedSprite,
-  Container,
-  Graphics,
-  Rectangle,
-  Sprite,
-  Texture,
-} from 'pixi.js'
+import { AnimatedSprite, Container, Rectangle, Texture } from 'pixi.js'
 import ShootArea from './ShootArea'
 
 export default class Building extends Container {
-  private size = 64
+  private size = 128
   private shootArea: ShootArea
   private cooldown = 0
   readonly shootRate = 60
@@ -44,10 +37,17 @@ export default class Building extends Container {
 
   public draw() {
     this.body = new AnimatedSprite(Building.buildFrames())
+    this.body.anchor.y = 0.5
     this.body.width = this.size
     this.body.height = this.size
-    this.body.animationSpeed = 0.15
+    this.body.animationSpeed = 0.35
+    this.body.loop = false
+    this.body.onComplete = () => this.body.gotoAndStop(0)
     this.addChild(this.body)
+  }
+
+  shoot() {
+    this.body.gotoAndPlay(0)
   }
 
   get center() {
