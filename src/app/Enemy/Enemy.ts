@@ -1,4 +1,10 @@
-import { Container, Graphics } from 'pixi.js'
+import {
+  AnimatedSprite,
+  Container,
+  Graphics,
+  Rectangle,
+  Texture,
+} from 'pixi.js'
 import { ENEMY_DIRECTION } from './EnemyManager'
 
 export class Enemy extends Container {
@@ -15,11 +21,14 @@ export class Enemy extends Container {
   private _health = 100
   private healthBar!: Graphics
 
+  private static readonly FRAME_COUNT = 7
+  private body!: AnimatedSprite
+
   constructor(waypoints: { x: number; y: number }[]) {
     super()
 
     this.direction = ENEMY_DIRECTION.RIGHT
-    this.speed = 10
+    this.speed = 1
     this.waypoints = waypoints
     this.x = waypoints[0].x
     this.y = waypoints[0].y
@@ -41,10 +50,29 @@ export class Enemy extends Container {
     return (this.eHeight + this.eWidth) / 2
   }
 
-  private draw() {
-    this.addChild(
-      new Graphics().rect(0, 0, this.eWidth, this.eHeight).fill('red'),
+  private static buildFrames(): Texture[] {
+    const base = Texture.from('orc.png')
+    const { source, frame } = base
+    const fw = frame.width / Enemy.FRAME_COUNT
+
+    return Array.from(
+      { length: Enemy.FRAME_COUNT },
+      (_, i) =>
+        new Texture({
+          source,
+          frame: new Rectangle(frame.x + i * fw, frame.y, fw, frame.height),
+        }),
     )
+  }
+
+  private draw() {
+    this.body = new AnimatedSprite(Enemy.buildFrames())
+    this.body.width = this.eWidth
+    this.body.height = this.eHeight
+    this.body.animationSpeed = 0.15
+    this.body.play()
+    this.addChild(this.body)
+
     this.addChild(new Graphics().rect(0, -15, this.eWidth, 12).fill('darkred'))
 
     this.healthBar = new Graphics()

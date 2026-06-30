@@ -1,4 +1,4 @@
-import { Graphics, Sprite, Texture } from 'pixi.js'
+import { Sprite, Texture } from 'pixi.js'
 import { Enemy } from '../Enemy/Enemy'
 
 export default class Projectile extends Sprite {

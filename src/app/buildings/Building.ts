@@ -1,4 +1,11 @@
-import { Container, Graphics } from 'pixi.js'
+import {
+  AnimatedSprite,
+  Container,
+  Graphics,
+  Rectangle,
+  Sprite,
+  Texture,
+} from 'pixi.js'
 import ShootArea from './ShootArea'
 
 export default class Building extends Container {
@@ -6,6 +13,8 @@ export default class Building extends Container {
   private shootArea: ShootArea
   private cooldown = 0
   readonly shootRate = 60
+  private static readonly FRAME_COUNT = 19
+  private body!: AnimatedSprite
 
   constructor({ pos = { x: 0, y: 0 } }) {
     super()
@@ -16,11 +25,29 @@ export default class Building extends Container {
     this.shootArea.x = this.size / 2
     this.shootArea.y = this.size / 2
     this.addChild(this.shootArea)
+    this.draw()
+  }
+  private static buildFrames(): Texture[] {
+    const base = Texture.from('tower.png')
+    const { source, frame } = base
+    const fw = frame.width / Building.FRAME_COUNT
 
-    const building = new Graphics()
-      .rect(0, 0, this.size, this.size)
-      .fill('blue')
-    this.addChild(building)
+    return Array.from(
+      { length: Building.FRAME_COUNT },
+      (_, i) =>
+        new Texture({
+          source,
+          frame: new Rectangle(frame.x + i * fw, frame.y, fw, frame.height),
+        }),
+    )
+  }
+
+  public draw() {
+    this.body = new AnimatedSprite(Building.buildFrames())
+    this.body.width = this.size
+    this.body.height = this.size
+    this.body.animationSpeed = 0.15
+    this.addChild(this.body)
   }
 
   get center() {
