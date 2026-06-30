@@ -1,7 +1,7 @@
-import { Graphics } from 'pixi.js'
+import { Graphics, Sprite, Texture } from 'pixi.js'
 import { Enemy } from '../Enemy/Enemy'
 
-export default class Projectile extends Graphics {
+export default class Projectile extends Sprite {
   private speed = 3
   public radius = 10
 
@@ -12,7 +12,7 @@ export default class Projectile extends Graphics {
     super()
     this.x = pos.x
     this.y = pos.y
-    this.circle(0, 0, this.radius).fill('cyan')
+    this.texture = Texture.from('projectile.png')
   }
 
   update() {
