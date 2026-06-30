@@ -18,6 +18,7 @@ export default class Building extends Container {
     this.shootArea.x = this.size / 2
     this.shootArea.y = this.size / 2
     this.addChild(this.shootArea)
+    this.zIndex = pos.y
     this.draw()
   }
   private static buildFrames(): Texture[] {
