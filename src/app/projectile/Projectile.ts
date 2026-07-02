@@ -1,5 +1,5 @@
 import { Sprite, Texture } from 'pixi.js'
-import { Enemy } from '../Enemy/Enemy'
+import { Enemy } from '../enemy/Enemy'
 
 export default class Projectile extends Sprite {
   private speed = 3

@@ -1,10 +1,10 @@
 import { Container, Sprite, Texture } from 'pixi.js'
 import tilesData2D from './tilesPlacementData'
 import PlacementTile from './PlacementTile'
-import Building from '../buildings/Building'
+import Building from '../tower/Tower'
 import Projectile from '../projectile/Projectile'
 import Explosion from '../projectile/Explosion'
-import { Enemy } from '../Enemy/Enemy'
+import { Enemy } from '../enemy/Enemy'
 
 enum Tile {
   Empty,
@@ -29,7 +29,6 @@ export default class MapLayer extends Container {
   private placementTiles: PlacementTile[] = []
   private buildings: Building[] = []
   private projectiles: Projectile[] = []
-  private frames = 0
 
   constructor() {
     super()
@@ -132,11 +131,11 @@ export default class MapLayer extends Container {
   }
 
   resize(width: number, height: number) {
-    // const naturalWidth = this.mapWidth * this.tileSize
-    // const naturalHeight = this.mapHeight * this.tileSize
-    // const scale = Math.min(width / naturalWidth, height / naturalHeight)
-    // this.scale.set(scale)
-    // this.x = (width - naturalWidth * scale) / 2
-    // this.y = (height - naturalHeight * scale) / 2
+    const naturalWidth = this.width * this.tileSize
+    const naturalHeight = this.height * this.tileSize
+    const scale = Math.min(width / naturalWidth, height / naturalHeight)
+    this.scale.set(scale)
+    this.x = (width - naturalWidth * scale) / 2
+    this.y = (height - naturalHeight * scale) / 2
   }
 }

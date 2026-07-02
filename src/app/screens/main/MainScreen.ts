@@ -5,7 +5,7 @@ import { PausePopup } from '../../popups/PausePopup'
 import { Bouncer } from './Bouncer'
 import { MainUI } from './MainUI'
 import MapLayer from '@/app/map/MapLayer'
-import EnemyManager from '@/app/Enemy/EnemyManager'
+import EnemyManager from '@/app/enemy/EnemyManager'
 
 /** The screen that holds the app */
 export class MainScreen extends Container {
@@ -89,7 +89,7 @@ export class MainScreen extends Container {
     this.mainUI.resize(width, height)
 
     this.bouncer.resize(width, height)
-    // this.mapLayer.resize(width, height)
+    this.mapLayer.resize(width, height)
   }
 
   /** Show screen with animations */
