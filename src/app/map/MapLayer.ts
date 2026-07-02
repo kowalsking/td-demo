@@ -6,6 +6,9 @@ import Projectile from '../projectile/Projectile'
 import Explosion from '../projectile/Explosion'
 import { Enemy } from '../enemy/Enemy'
 
+const VIRTUAL_WIDTH = 1920
+const VIRTUAL_HEIGHT = 1080
+
 enum Tile {
   Empty,
   BuildZone,
@@ -131,8 +134,9 @@ export default class MapLayer extends Container {
   }
 
   resize(width: number, height: number) {
-    const naturalWidth = this.width * this.tileSize
-    const naturalHeight = this.height * this.tileSize
+    const naturalWidth = tilesData2D[0].length * this.tileSize
+    const naturalHeight = tilesData2D.length * this.tileSize
+    // fit: preserve aspect, letterbox. Use Math.max to cover (crop) instead.
     const scale = Math.min(width / naturalWidth, height / naturalHeight)
     this.scale.set(scale)
     this.x = (width - naturalWidth * scale) / 2
