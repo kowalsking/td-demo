@@ -3,6 +3,7 @@ import tilesData2D from './tilesPlacementData'
 import PlacementTile from './PlacementTile'
 import Building from '../buildings/Building'
 import Projectile from '../projectile/Projectile'
+import Explosion from '../projectile/Explosion'
 import { Enemy } from '../Enemy/Enemy'
 
 enum Tile {
@@ -113,7 +114,8 @@ export default class MapLayer extends Container {
       const yDifference = p.enemy.center.y - p.y
       const distance = Math.hypot(xDifference, yDifference)
       // hit enemy
-      if (distance < p.enemy.size + p.radius) {
+      if (distance < p.enemy.size) {
+        this.addChild(new Explosion({ x: p.x, y: p.y }))
         p.enemy.health -= 20
         if (p.enemy.health <= 0) {
           const enemyIndex = enemies.indexOf(p.enemy)

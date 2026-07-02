@@ -12,6 +12,7 @@ export default class Projectile extends Sprite {
     super()
     this.x = pos.x
     this.y = pos.y
+    this.anchor.set(0.5)
     this.texture = Texture.from('projectile.png')
   }
 
