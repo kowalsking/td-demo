@@ -2,8 +2,8 @@ import { Waypoint } from './MapLayer'
 
 export const waypoints: Waypoint[] = [
   {
-    x: 0,
-    y: 0,
+    x: -151.452398168233,
+    y: 471.107254760183,
   },
   {
     x: -151.452398168233,
